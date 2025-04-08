@@ -28,12 +28,24 @@ const nextConfig = {
     parallelServerCompiles: true,
   },
   // Configuración para resolver problemas de compatibilidad con React 18/19
-  webpack: (config) => {
-    // Evitar errores de minificación
+  webpack: (config, { dev, isServer }) => {
+    // Siempre desactivar la minificación, independientemente del entorno
     config.optimization.minimize = false;
+    
+    // Configuraciones adicionales para evitar problemas en producción
+    if (!dev) {
+      // Desactivar la optimización de React en producción
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react': 'react',
+        'react-dom': 'react-dom'
+      };
+    }
     
     return config;
   },
+  // Desactivar la compresión para evitar problemas con la minificación
+  compress: false,
 }
 
 if (userConfig) {
