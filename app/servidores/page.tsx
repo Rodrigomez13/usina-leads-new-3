@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -37,6 +39,11 @@ const servers = [
 ]
 
 export default function ServidoresPage() {
+  const handleSaveServer = (server: any) => {
+    console.log("Guardando servidor:", server)
+    // Aquí implementarías la lógica para guardar los cambios
+  }
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between">
@@ -115,7 +122,7 @@ export default function ServidoresPage() {
 
           {servers.map((server) => (
             <TabsContent key={server.id} value={server.id} className="space-y-4">
-              <ServerSettings server={server} onSave={() => {}} />
+              <ServerSettings server={server} onSave={handleSaveServer} />
             </TabsContent>
           ))}
         </Tabs>
