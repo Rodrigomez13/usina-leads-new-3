@@ -9,11 +9,27 @@ import {
   Legend,
   LineElement,
   PointElement,
+  BarController,
+  LineController,
 } from "chart.js"
 import { Chart } from "react-chartjs-2"
 
-// Registrar los componentes necesarios de Chart.js
-ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend)
+// Definir un tipo específico para interaction.mode
+type InteractionMode = "y" | "index" | "x" | "dataset" | "point" | "nearest" | undefined
+
+// Registrar TODOS los componentes necesarios de Chart.js, incluyendo los controladores
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  BarController,
+  LineController,
+  Title,
+  Tooltip,
+  Legend,
+)
 
 // Datos de ejemplo para el gráfico
 const labels = [
@@ -42,26 +58,25 @@ const loadsData = [65, 113, 167, 196, 229, 277, 305, 357, 398, 446, 506, 555, 61
 const costData = [2.3, 2.42, 2.68, 2.88, 3.01, 3.46, 3.56, 3.5, 3.42, 3.6, 3.8, 4.02, 4.25, 4.6, 4.77, 5.38, 5.78, 5.95]
 
 export function ChartComponent() {
-  // Definir los datos del gráfico con un tipo más genérico
   const chartData = {
     labels,
     datasets: [
       {
-        type: "bar" as const,
+        type: "bar", // Asegúrate de que sea un literal de cadena válido
         label: "Leads",
         backgroundColor: "rgba(255, 99, 132, 0.7)",
         data: leadsData,
         yAxisID: "y",
       },
       {
-        type: "bar" as const,
+        type: "bar", // Asegúrate de que sea un literal de cadena válido
         label: "Cargas",
         backgroundColor: "rgba(54, 162, 235, 0.7)",
         data: loadsData,
         yAxisID: "y",
       },
       {
-        type: "line" as const,
+        type: "line", // Asegúrate de que sea un literal de cadena válido
         label: "Costo por Carga ($)",
         borderColor: "rgba(255, 159, 64, 1)",
         borderWidth: 2,
@@ -72,28 +87,27 @@ export function ChartComponent() {
     ],
   }
 
-  // Definir las opciones del gráfico
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
-      mode: "index" as const,
+      mode: "nearest" as InteractionMode, // Usar un valor válido con type assertion
       intersect: false,
     },
     scales: {
       y: {
-        type: "linear" as const,
+        type: "linear",
         display: true,
-        position: "left" as const,
+        position: "left",
         title: {
           display: true,
           text: "Cantidad",
         },
       },
       y1: {
-        type: "linear" as const,
+        type: "linear",
         display: true,
-        position: "right" as const,
+        position: "right",
         grid: {
           drawOnChartArea: false,
         },
@@ -109,7 +123,6 @@ export function ChartComponent() {
 
   return (
     <div style={{ height: "400px" }}>
-      {/* Usar el componente Bar con los datos y opciones */}
       <Chart type="bar" data={chartData} options={options} />
     </div>
   )
