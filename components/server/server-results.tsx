@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp } from "lucide-react"
-import DailyProgressChart from "@/components/dashboard/daily-progress-chart"
+import SimpleChart from "@/components/dashboard/simple-chart"
 import FranchiseDistributionTable from "@/components/dashboard/franchise-distribution-table"
 
 interface ServerResultsProps {
@@ -14,6 +14,8 @@ interface ServerResultsProps {
 
 export default function ServerResults({ serverId, defaultExpanded = true }: ServerResultsProps) {
   const [expanded, setExpanded] = useState(defaultExpanded)
+  // Usamos una referencia estática para la fecha para evitar problemas de hidratación
+  const currentDate = "2023-04-08" // Fecha estática para evitar problemas de hidratación
 
   return (
     <div className="space-y-4">
@@ -42,7 +44,7 @@ export default function ServerResults({ serverId, defaultExpanded = true }: Serv
               <CardDescription>Evolución de leads y cargas durante el día</CardDescription>
             </CardHeader>
             <CardContent className="pl-2">
-              <DailyProgressChart />
+              <SimpleChart />
             </CardContent>
           </Card>
 

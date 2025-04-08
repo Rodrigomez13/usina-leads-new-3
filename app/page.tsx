@@ -8,6 +8,9 @@ import ServerMetricsCard from "@/components/dashboard/server-metrics-card"
 import ServerResults from "@/components/server/server-results"
 
 export default function Dashboard() {
+  // Fecha estática para evitar problemas de hidratación
+  const lastUpdateDate = "08/04/2023 15:30:00"
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between">
@@ -17,7 +20,7 @@ export default function Dashboard() {
             <Settings className="mr-2 h-4 w-4" />
             Configurar Servidores
           </Button>
-          <p className="text-sm text-muted-foreground">Última actualización: {new Date().toLocaleString("es-AR")}</p>
+          <p className="text-sm text-muted-foreground">Última actualización: {lastUpdateDate}</p>
         </div>
       </div>
 
