@@ -10,15 +10,15 @@ import { Search, PlusCircle } from "lucide-react"
 import type { Server, Advertisement, WhatsAppApi, ActiveAdvertisement } from "@/lib/types"
 
 interface AdActivationProps {
-  server: Server
-  advertisements: Advertisement[]
-  apis: WhatsAppApi[]
-  activeAds: ActiveAdvertisement[]
-  onActivate: (activeAd: Omit<ActiveAdvertisement, "id" | "createdAt" | "updatedAt">) => void
-  onDeactivate: (activeAdId: string) => void
+  readonly server: Server
+  readonly advertisements: readonly Advertisement[]
+  readonly apis: readonly WhatsAppApi[]
+  readonly activeAds: readonly ActiveAdvertisement[]
+  readonly onActivate: (activeAd: Omit<ActiveAdvertisement, "id" | "createdAt" | "updatedAt">) => void
+  readonly onDeactivate: (activeAdId: string) => void
 }
 
-export default function AdActivation({
+export default function AdActivation({  
   server,
   advertisements,
   apis,

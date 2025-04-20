@@ -24,8 +24,13 @@ import { useMobile } from "@/hooks/use-mobile"
 
 const navItems = [
   {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: BarChart3,
+  },
+  {
     title: "Servidores",
-    href: "/",
+    href: "/servidores",
     icon: Server,
   },
   {
@@ -50,12 +55,7 @@ const navItems = [
       },
     ],
   },
-  {
-    title: "Configuración de Servidores",
-    href: "/servidores",
-    icon: Settings,
-  },
-  {
+ {
     title: "Leads",
     href: "/leads",
     icon: Users,
@@ -75,11 +75,7 @@ const navItems = [
     href: "/finanzas",
     icon: DollarSign,
   },
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: BarChart3,
-  },
+
 ]
 
 export default function Sidebar() {
@@ -107,18 +103,16 @@ export default function Sidebar() {
         </Button>
       )}
 
-      <div
-        className={cn(
-          "bg-slate-900 text-white h-full w-64 flex flex-col transition-all duration-300 ease-in-out",
-          isMobile && (isOpen ? "fixed left-0 z-40" : "fixed -left-64 z-40"),
-        )}
-      >
+      <div className={cn(
+        "bg-slate-900 text-white w-64 flex flex-col justify-between h-screen transition-all duration-300 ease-in-out",
+        isMobile && (isOpen ? "fixed left-0 z-40" : "fixed -left-64 z-40"),
+      )}>
         <div className="p-6">
           <h1 className="text-xl font-bold">Usina Leads</h1>
           <p className="text-slate-400 text-sm">Sistema de Gestión</p>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1">
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => (
             <div key={item.href} className="space-y-1">
               {item.children ? (

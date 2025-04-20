@@ -1,21 +1,14 @@
-import type React from "react"
-import { ThemeProvider } from "@/components/theme-provider"
-import "./globals.css"
-import Sidebar from "@/components/sidebar"
+import type { ReactNode } from 'react'
+import { ThemeProvider } from '@/components/theme-provider'
+import './globals.css'
+import LayoutWrapper from '@/components/LayoutWrapper'
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className="font-sans">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <div className="flex h-screen">
-            <Sidebar />
-            <div className="flex-1 overflow-auto">{children}</div>
-          </div>
+    <html lang="es">
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <LayoutWrapper>{children}</LayoutWrapper>
         </ThemeProvider>
       </body>
     </html>

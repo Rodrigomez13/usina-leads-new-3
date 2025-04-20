@@ -55,15 +55,52 @@ export interface Advertisement {
 }
 
 // Servidores (Entornos de Trabajo)
-export interface Server {
+export interface ServerEjemplos {
   id: string
   name: string
   description?: string
-  taxCoefficient: number // Coeficiente de impuesto
+  coefficient: number // Coeficiente de impuesto
   isActive: boolean
   additionalParameters?: Record<string, any> // Para futuras variables
   createdAt: Date
   updatedAt: Date
+}
+export type Server = {
+  id: string
+  name: string
+  coefficient: number
+  description: string
+  is_active: boolean
+}
+
+
+
+
+// Registro diario por anuncio (tabla server_ads)
+export interface ServerAd {
+  id: string
+  server_id: string
+  ad_id: string
+  api_id?: string
+  date: string
+  leads: number
+  loads: number
+  spent: number
+  total_cost: number
+}
+
+// Distribución de franquicias (tabla o vista derivaciones)
+export interface FranchiseLoad {
+  franquicia: string
+  cantidad: number
+}
+
+// Gráfico diario por fecha (por ahora mockeado, pero se puede usar para chart)
+export interface DailyGraph {
+  date: string
+  loads: number
+  leads: number
+  spent: number
 }
 
 // Activación de Anuncios en Servidores
@@ -101,7 +138,7 @@ export interface DailyRecord {
   totalLoads: number
   conversion: number
   adSpend: number
-  totalCost: number // adSpend * taxCoefficient + otras variables
+  totalCost: number // adSpend * Coefficient + otras variables
   createdAt: Date
   updatedAt: Date
 }

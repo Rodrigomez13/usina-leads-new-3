@@ -30,7 +30,7 @@ export default function PublicidadPage() {
           <TabsTrigger value="business-managers">Business Managers</TabsTrigger>
           <TabsTrigger value="campaigns">Campañas</TabsTrigger>
           <TabsTrigger value="adsets">Conjuntos de Anuncios</TabsTrigger>
-          <TabsTrigger value="ads">Anuncios</TabsTrigger>
+          <TabsTrigger value="view_active_server_ads">Anuncios</TabsTrigger>
           <TabsTrigger value="apis">APIs</TabsTrigger>
         </TabsList>
 
@@ -198,7 +198,7 @@ export default function PublicidadPage() {
         </TabsContent>
 
         {/* Pestaña de Anuncios */}
-        <TabsContent value="ads" className="space-y-4">
+        <TabsContent value="view_active_server_ads" className="space-y-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>

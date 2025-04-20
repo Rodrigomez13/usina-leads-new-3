@@ -1,54 +1,23 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Search, Plus } from "lucide-react"
+import { createClient } from "@/utils/supabase/client"
 
-// Datos de ejemplo para la tabla de anuncios
-const adData = [
-  {
-    id: "120212593871270338",
-    bm: "RF 2",
-    budget: "$100.00",
-    spent: "$74.35",
-    api: "Vivien",
-    status: "TESTING CONVERSION",
-    leads: 10,
-    loads: 8,
-    conversion: "35%",
-    costPerLead: "$3.23",
-    costPerLoad: "$9.29",
-  },
-  {
-    id: "120213061164050338",
-    bm: "RF 2",
-    budget: "$30.00",
-    spent: "$15.99",
-    api: "Ezra",
-    status: "TESTING CONVERSION",
-    leads: 6,
-    loads: 2,
-    conversion: "33%",
-    costPerLead: "$2.67",
-    costPerLoad: "$8.00",
-  },
-  {
-    id: "120212246465590338",
-    bm: "RF 2",
-    budget: "$4,000.00",
-    spent: "$3,449.59",
-    api: "MARANDA",
-    status: "ACTIVE",
-    leads: 1304,
-    loads: 664,
-    conversion: "51%",
-    costPerLead: "$2.65",
-    costPerLoad: "$5.20",
-  },
-]
+interface Ad {
+  id: string
+  bm: string
+  budget: number
+  spent: number
+  api: string
+  status: string
+  leads: number
+  loads: number
+}
 
 interface ServerMetricsCardProps {
   serverId: string
@@ -56,12 +25,32 @@ interface ServerMetricsCardProps {
 
 export default function ServerMetricsCard({ serverId }: ServerMetricsCardProps) {
   const [searchTerm, setSearchTerm] = useState("")
+  const [view_active_server_ads, setAds] = useState<Ad[]>([])
 
-  const filteredData = adData.filter(
+  useEffect(() => {
+    const fetchAds = async () => {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from("view_active_server_ads")
+        .select("*")
+        .eq("server", serverId)
+        .or("status.eq.ACTIVE,status.eq.TESTING CONVERSION")
+
+      if (!error && data) {
+        setAds(data)
+      } else {
+        console.error("Error al obtener anuncios:", error)
+      }
+    }
+
+    fetchAds()
+  }, [serverId])
+
+  const filteredData = view_active_server_ads.filter(
     (ad) =>
       ad.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ad.api.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ad.status.toLowerCase().includes(searchTerm.toLowerCase()),
+      ad.status.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
@@ -86,7 +75,7 @@ export default function ServerMetricsCard({ serverId }: ServerMetricsCardProps) 
         </div>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -100,39 +89,45 @@ export default function ServerMetricsCard({ serverId }: ServerMetricsCardProps) 
                 <TableHead>Loads</TableHead>
                 <TableHead>Conversion</TableHead>
                 <TableHead>$ Lead</TableHead>
-                <TableHead>$ Loads</TableHead>
+                <TableHead>$ Load</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredData.map((ad) => (
-                <TableRow key={ad.id}>
-                  <TableCell className="font-medium">{ad.id}</TableCell>
-                  <TableCell>{ad.bm}</TableCell>
-                  <TableCell>{ad.budget}</TableCell>
-                  <TableCell>{ad.spent}</TableCell>
-                  <TableCell>{ad.api}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        ad.status === "ACTIVE"
-                          ? "bg-green-100 text-green-800"
-                          : ad.status === "TESTING CONVERSION"
+              {filteredData.map((ad) => {
+                const conversion = ad.leads ? ((ad.loads / ad.leads) * 100).toFixed(0) + "%" : "-"
+                const costPerLead = ad.leads ? `$${(ad.spent / ad.leads).toFixed(2)}` : "-"
+                const costPerLoad = ad.loads ? `$${(ad.spent / ad.loads).toFixed(2)}` : "-"
+
+                return (
+                  <TableRow key={ad.id}>
+                    <TableCell className="font-medium">{ad.id}</TableCell>
+                    <TableCell>{ad.bm}</TableCell>
+                    <TableCell>${ad.budget}</TableCell>
+                    <TableCell>${ad.spent}</TableCell>
+                    <TableCell>{ad.api}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          ad.status === "ACTIVE"
+                            ? "bg-green-100 text-green-800"
+                            : ad.status === "TESTING CONVERSION"
                             ? "bg-blue-100 text-blue-800"
                             : ad.status === "API DEAD"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {ad.status}
-                    </span>
-                  </TableCell>
-                  <TableCell>{ad.leads}</TableCell>
-                  <TableCell>{ad.loads}</TableCell>
-                  <TableCell>{ad.conversion}</TableCell>
-                  <TableCell>{ad.costPerLead}</TableCell>
-                  <TableCell>{ad.costPerLoad}</TableCell>
-                </TableRow>
-              ))}
+                            ? "bg-red-100 text-red-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {ad.status}
+                      </span>
+                    </TableCell>
+                    <TableCell>{ad.leads}</TableCell>
+                    <TableCell>{ad.loads}</TableCell>
+                    <TableCell>{conversion}</TableCell>
+                    <TableCell>{costPerLead}</TableCell>
+                    <TableCell>{costPerLoad}</TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </div>

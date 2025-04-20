@@ -1,14 +1,19 @@
-"use client"
+'use client'
 
-import type React from "react"
-
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import type { Server } from "@/lib/types"
+import type React from 'react'
+import { useState } from 'react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
+import type { Server } from '@/lib/types'
 
 interface ServerSettingsProps {
   server: Server
@@ -17,6 +22,7 @@ interface ServerSettingsProps {
 
 export default function ServerSettings({ server, onSave }: ServerSettingsProps) {
   const [editedServer, setEditedServer] = useState<Server>(server)
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (field: keyof Server, value: any) => {
     setEditedServer((prev) => ({
@@ -25,9 +31,11 @@ export default function ServerSettings({ server, onSave }: ServerSettingsProps) 
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onSave(editedServer)
+    setLoading(true)
+    await onSave(editedServer)
+    setLoading(false)
   }
 
   return (
@@ -44,20 +52,20 @@ export default function ServerSettings({ server, onSave }: ServerSettingsProps) 
               <Input
                 id="name"
                 value={editedServer.name}
-                onChange={(e) => handleChange("name", e.target.value)}
-                placeholder="Ej: Server 4"
+                onChange={(e) => handleChange('name', e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="taxCoefficient">Coeficiente de Impuesto</Label>
+              <Label htmlFor="coefficient">Coeficiente de Impuesto</Label>
               <Input
-                id="taxCoefficient"
+                id="coefficient"
                 type="number"
                 step="0.01"
-                value={editedServer.taxCoefficient}
-                onChange={(e) => handleChange("taxCoefficient", Number.parseFloat(e.target.value))}
-                placeholder="Ej: 0.12"
+                value={editedServer.coefficient}
+                onChange={(e) =>
+                  handleChange('coefficient', parseFloat(e.target.value))
+                }
               />
             </div>
           </div>
@@ -66,22 +74,23 @@ export default function ServerSettings({ server, onSave }: ServerSettingsProps) 
             <Label htmlFor="description">Descripción</Label>
             <Input
               id="description"
-              value={editedServer.description || ""}
-              onChange={(e) => handleChange("description", e.target.value)}
-              placeholder="Descripción del servidor"
+              value={editedServer.description || ''}
+              onChange={(e) => handleChange('description', e.target.value)}
             />
           </div>
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="isActive"
-              checked={editedServer.isActive}
-              onCheckedChange={(checked) => handleChange("isActive", checked)}
+              id="is_active"
+              checked={editedServer.is_active}
+              onCheckedChange={(checked) => handleChange('is_active', checked)}
             />
-            <Label htmlFor="isActive">Servidor Activo</Label>
+            <Label htmlFor="is_active">Servidor Activo</Label>
           </div>
 
-          <Button type="submit">Guardar Configuración</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Guardando...' : 'Guardar Configuración'}
+          </Button>
         </form>
       </CardContent>
     </Card>
